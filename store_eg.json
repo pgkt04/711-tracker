@@ -1,0 +1,100 @@
+{
+  "storeId": "2125",
+  "distance": 12.753826414853,
+  "name": "Mount Druitt",
+  "location": [
+    -33.76482,
+    150.82553
+  ],
+  "centre": "",
+  "address": {
+    "address1": "Lot 6 Luxford Road",
+    "address2": "",
+    "suburb": "Mount Druitt",
+    "state": "NSW",
+    "postcode": "2770",
+    "extra": ""
+  },
+  "phone": "02 9675 5800",
+  "fax": "",
+  "allHours": true,
+  "isActive": true,
+  "isDigitalDisplay": false,
+  "isFuelStore": true,
+  "hasKiosk": false,
+  "features": [
+    "CupRescue",
+    "TrailerHire",
+    "Krispykreme",
+    "BenJerry",
+    "AusPostParcelLockers",
+    "Velocity",
+    "MCOPilot",
+    "PaPPilot",
+    "PaP",
+    "Smoothies&Frappés",
+    "MCO"
+  ],
+  "ParcelMate": [
+    
+  ],
+  "fuelOptions": [
+    "ULP",
+    "Diesel",
+    "LPG",
+    "E10",
+    "PULP98"
+  ],
+  "atm": true,
+  "isBrandNewStore": false,
+  "isFranchiseOpp": false,
+  "franchiseSuburb": "",
+  "franchiseEstimatedCost": "",
+  "allowStoreDelivery": false,
+  "openingHours": [
+    {
+      "day_of_week": 0,
+      "start_time": "12:00 am",
+      "end_time": "11:59 pm"
+    },
+    {
+      "day_of_week": 1,
+      "start_time": "12:00 am",
+      "end_time": "11:59 pm"
+    },
+    {
+      "day_of_week": 2,
+      "start_time": "12:00 am",
+      "end_time": "11:59 pm"
+    },
+    {
+      "day_of_week": 3,
+      "start_time": "12:00 am",
+      "end_time": "11:59 pm"
+    },
+    {
+      "day_of_week": 4,
+      "start_time": "12:00 am",
+      "end_time": "11:59 pm"
+    },
+    {
+      "day_of_week": 5,
+      "start_time": "12:00 am",
+      "end_time": "11:59 pm"
+    },
+    {
+      "day_of_week": 6,
+      "start_time": "12:00 am",
+      "end_time": "11:59 pm"
+    }
+  ],
+  "specialOpeningHours": [
+    
+  ],
+  "timeSlot": "",
+  "region": {
+    "countryId": "AU",
+    "regionId": 1708,
+    "region": "New South Wales"
+  }
+}
