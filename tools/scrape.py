@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-# this project scrapes the Project Zero Three API
 import requests
 
 def proj_zero_three():
