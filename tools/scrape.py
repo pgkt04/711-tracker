@@ -19,7 +19,8 @@ def get_stores(dist: int):
 
 def get_fuel_price(store_no: int) -> requests.models.Response:
   """
-  Targets a specific store and fetches the fuel price
+  Targets a specific store and fetches the fuel price.
+  Needs to also be a fuel store.
 
   References:
   https://www.7eleven.com.au/storelocator-retail/mulesoft/fuelPrices?storeNo=2362
@@ -44,3 +45,4 @@ def get_all_stores():
 def get_all_fuel_prices():
   all_stores = get_all_stores()
 
+print(len(get_all_stores()))
