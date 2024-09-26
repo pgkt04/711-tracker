@@ -12,7 +12,8 @@ def get_stores(dist: int):
 
   References:
   https://www.7eleven.com.au/store-locator.html
-  https://www.7eleven.com.au/storelocator-retail/mulesoft/stores?dist=10
+  https://www.7eleven.com.au/storelocator-retail/mulesoft/stores?dist=10                                  # need location or none at all
+  https://www.7eleven.com.au/storelocator-retail/mulesoft/stores?lat=-33.8688197&long=151.2092955&dist=10 # need to specify location or none at all
   """
   resp = requests.get(f"https://www.7eleven.com.au/storelocator-retail/mulesoft/stores?dist={dist}")
   return resp

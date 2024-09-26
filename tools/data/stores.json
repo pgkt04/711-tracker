@@ -1,0 +1,267 @@
+{
+    "stores": [
+      {
+        "storeId": "2142",
+        "distance": 0.8426762411159,
+        "name": "287 Elizabeth Street",
+        "location": [
+          -33.876397985204,
+          151.20933855146
+        ],
+        "centre": "",
+        "address": {
+          "address1": "287 Elizabeth Street",
+          "address2": "",
+          "suburb": "Sydney",
+          "state": "NSW",
+          "postcode": "2000",
+          "extra": ""
+        },
+        "phone": "02 9261 2008",
+        "fax": "",
+        "allHours": true,
+        "isActive": true,
+        "isDigitalDisplay": false,
+        "isFuelStore": false,
+        "hasKiosk": false,
+        "features": [
+          "CupRescue",
+          "Alt Milk",
+          "BenJerry",
+          "Krispykreme",
+          "AusPostParcelLockers",
+          "Velocity",
+          "Smoothies&Frappés",
+          "MCOPilot",
+          "PaPPilot",
+          "MCO"
+        ],
+        "ParcelMate": [],
+        "fuelOptions": [],
+        "atm": true,
+        "isBrandNewStore": false,
+        "isFranchiseOpp": false,
+        "franchiseSuburb": "",
+        "franchiseEstimatedCost": "",
+        "allowStoreDelivery": false,
+        "openingHours": [
+          {
+            "day_of_week": 0,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 1,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 2,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 3,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 4,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 5,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 6,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          }
+        ],
+        "specialOpeningHours": [],
+        "timeSlot": "",
+        "region": {
+          "countryId": "AU",
+          "regionId": 1708,
+          "region": "New South Wales"
+        }
+      },
+      {
+        "storeId": "2132",
+        "distance": 0.6245894481664,
+        "name": "100 Bathurst Street",
+        "location": [
+          -33.87430610286,
+          151.20784479265
+        ],
+        "centre": "",
+        "address": {
+          "address1": "100 Bathurst Steet (Cnr Pitt & Bathurst Streets)",
+          "address2": "",
+          "suburb": "Sydney",
+          "state": "NSW",
+          "postcode": "2000",
+          "extra": ""
+        },
+        "phone": "02 9261 0745",
+        "fax": "",
+        "allHours": true,
+        "isActive": true,
+        "isDigitalDisplay": false,
+        "isFuelStore": false,
+        "hasKiosk": false,
+        "features": [
+          "Alt Milk",
+          "BenJerry",
+          "Krispykreme",
+          "Velocity",
+          "MCOPilot",
+          "PaPPilot",
+          "MCO"
+        ],
+        "ParcelMate": [],
+        "fuelOptions": [],
+        "atm": true,
+        "isBrandNewStore": false,
+        "isFranchiseOpp": false,
+        "franchiseSuburb": "",
+        "franchiseEstimatedCost": "",
+        "allowStoreDelivery": false,
+        "openingHours": [
+          {
+            "day_of_week": 0,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 1,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 2,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 3,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 4,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 5,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 6,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          }
+        ],
+        "specialOpeningHours": [],
+        "timeSlot": "",
+        "region": {
+          "countryId": "AU",
+          "regionId": 1708,
+          "region": "New South Wales"
+        }
+      },
+      {
+        "storeId": "2080",
+        "distance": 0.45293801795093,
+        "name": "Clarence Street",
+        "location": [
+          -33.86654,
+          151.20523
+        ],
+        "centre": "",
+        "address": {
+          "address1": "64 Clarence Street",
+          "address2": "",
+          "suburb": "Sydney",
+          "state": "NSW",
+          "postcode": "2000",
+          "extra": ""
+        },
+        "phone": "02 9262 6008",
+        "fax": "",
+        "allHours": true,
+        "isActive": true,
+        "isDigitalDisplay": false,
+        "isFuelStore": false,
+        "hasKiosk": false,
+        "features": [
+          "CupRescue",
+          "Alt Milk",
+          "BenJerry",
+          "Krispykreme",
+          "Velocity",
+          "MCOPilot",
+          "PaPPilot",
+          "MCO"
+        ],
+        "ParcelMate": [],
+        "fuelOptions": [],
+        "atm": true,
+        "isBrandNewStore": false,
+        "isFranchiseOpp": false,
+        "franchiseSuburb": "",
+        "franchiseEstimatedCost": "615802",
+        "allowStoreDelivery": false,
+        "openingHours": [
+          {
+            "day_of_week": 0,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 1,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 2,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 3,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 4,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 5,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          },
+          {
+            "day_of_week": 6,
+            "start_time": "12:00 am",
+            "end_time": "11:59 pm"
+          }
+        ],
+        "specialOpeningHours": [],
+        "timeSlot": "",
+        "region": {
+          "countryId": "AU",
+          "regionId": 1708,
+          "region": "New South Wales"
+        },
+        "hideFromStorelocator": false
+      }
+    ]
+  }
