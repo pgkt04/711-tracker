@@ -1,0 +1,39 @@
+{
+    "data": [
+      {
+        "ean": "52",
+        "price": 1997,
+        "priceDate": "2024-09-26T05:10:00+10:00",
+        "isRecentlyUpdated": true,
+        "storeNo": "2362"
+      },
+      {
+        "ean": "53",
+        "price": 1757,
+        "priceDate": "2024-09-26T17:19:00+10:00",
+        "isRecentlyUpdated": true,
+        "storeNo": "2362"
+      },
+      {
+        "ean": "57",
+        "price": 1977,
+        "priceDate": "2024-09-26T05:10:00+10:00",
+        "isRecentlyUpdated": true,
+        "storeNo": "2362"
+      },
+      {
+        "ean": "56",
+        "price": 2207,
+        "priceDate": "2024-09-26T05:10:00+10:00",
+        "isRecentlyUpdated": true,
+        "storeNo": "2362"
+      },
+      {
+        "ean": "55",
+        "price": 2127,
+        "priceDate": "2024-09-26T05:10:00+10:00",
+        "isRecentlyUpdated": true,
+        "storeNo": "2362"
+      }
+    ]
+  }
