@@ -1,11 +1,6 @@
-package main
+package stores
 
-import (
-	"encoding/json"
-	"fmt"
-	"net/http"
-)
-
+// Define the Go structs that match the JSON structure
 type Address struct {
 	Address1 string `json:"address1"`
 	Address2 string `json:"address2"`
@@ -59,32 +54,4 @@ type Store struct {
 
 type StoresResponse struct {
 	Stores []Store `json:"stores"`
-}
-
-func main() {
-	url := "https://www.7eleven.com.au/storelocator-retail/mulesoft/stores?lat=-33.8688197&long=151.2092955&dist=10" // Replace with the actual URL
-
-	resp, err := http.Get(url)
-	if err != nil {
-		fmt.Println("Error fetching data:", err)
-		return
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		fmt.Println("Error: status code", resp.StatusCode)
-		return
-	}
-
-	// Decode the response into the Go struct
-	var storesResponse StoresResponse
-	if err := json.NewDecoder(resp.Body).Decode(&storesResponse); err != nil {
-		fmt.Println("Error decoding response:", err)
-		return
-	}
-
-	// Print the decoded data (for debugging purposes)
-	for _, store := range storesResponse.Stores {
-		fmt.Printf("Store ID: %s, Name: %s, Distance: %f\n", store.StoreId, store.Name, store.Distance)
-	}
 }
