@@ -1,0 +1,2 @@
+# scraper
+this app aims to scrape all stores + stations and stores them into a postgresql db.
