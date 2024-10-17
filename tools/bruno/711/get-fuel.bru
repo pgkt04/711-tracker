@@ -1,0 +1,15 @@
+meta {
+  name: get-fuel
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://www.7eleven.com.au/storelocator-retail/mulesoft/fuelPrices?storeNo=1111
+  body: none
+  auth: none
+}
+
+params:query {
+  storeNo: 1111
+}

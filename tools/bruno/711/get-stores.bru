@@ -1,0 +1,15 @@
+meta {
+  name: get-stores
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://www.7eleven.com.au/storelocator-retail/mulesoft/stores
+  body: none
+  auth: none
+}
+
+params:query {
+  ~dist: 10
+}
