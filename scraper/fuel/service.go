@@ -8,7 +8,7 @@ import (
 )
 
 // Function to perform the GET request
-func getFuelPrices(storeNo string) (*FuelResponse, error) {
+func GetFuelPrices(storeNo string) (*FuelResponse, error) {
 	// Create the URL with the provided store number
 	url := fmt.Sprintf("https://www.7eleven.com.au/storelocator-retail/mulesoft/fuelPrices?storeNo=%s", storeNo)
 

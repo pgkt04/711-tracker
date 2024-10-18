@@ -7,9 +7,8 @@ import (
 )
 
 // FetchStores fetches the store data from the provided URL and returns a parsed response
-func FetchStores(url string) (StoresResponse, error) {
-	// Perform the HTTP GET request
-	resp, err := http.Get(url)
+func FetchStores() (StoresResponse, error) {
+	resp, err := http.Get("https://www.7eleven.com.au/storelocator-retail/mulesoft/stores")
 	if err != nil {
 		return StoresResponse{}, err
 	}
