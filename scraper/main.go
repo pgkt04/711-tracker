@@ -226,6 +226,15 @@ func writeToFile(filename string, data interface{}) error {
 	return nil
 }
 
+var eans = map[string]string{
+	"52": "Special Unleaded 91",
+	"53": "Special Diesel",
+	"57": "Special E10",
+	"56": "Supreme+ 98",
+	"55": "Extra 95",
+	//"94":
+}
+
 type StoreFuelData struct {
 	Store stores.Store
 	Price fuel.FuelPrice
@@ -268,28 +277,17 @@ func readFuelPricesFromFile(filename string) []fuel.FuelPrice {
 }
 
 func parseCheapest() {
-
-	//	eans := map[string]string{
-	//		"52": "Special Unleaded 91",
-	//		"53": "Special Diesel",
-	//		"57": "Special E10",
-	//		"56": "Supreme+ 98",
-	//		"55": "Extra 95",
-	//	}
-
 	storeFileName := "stores-20241018-155736.json" // Replace with actual path
 	fuelFileName := "fuel-20241018-155736.json"    // Replace with actual path
 
 	storesList := readStoresFromFile(storeFileName)
 	fuelPrices := readFuelPricesFromFile(fuelFileName)
 
-	// Create a map to hold stores by their Store ID for easy lookup
 	storeMap := make(map[string]stores.Store)
 	for _, store := range storesList {
 		storeMap[store.StoreId] = store
 	}
 
-	// Map to hold cheapest prices by State and EAN
 	type FuelStateData struct {
 		State     string
 		Price     float64
@@ -298,7 +296,7 @@ func parseCheapest() {
 		Suburb    string
 	}
 
-	stateEANMap := make(map[string]map[string][]FuelStateData) // map[state][EAN]
+	stateEANMap := make(map[string]map[string][]FuelStateData)
 
 	for _, price := range fuelPrices {
 		store, exists := storeMap[price.StoreNo]
@@ -308,7 +306,6 @@ func parseCheapest() {
 		ean := price.EAN
 		state := store.Address.State
 
-		// Initialize nested maps as needed
 		if _, exists := stateEANMap[state]; !exists {
 			stateEANMap[state] = make(map[string][]FuelStateData)
 		}
@@ -321,9 +318,8 @@ func parseCheapest() {
 		})
 	}
 
-	// Sort each list by price and take top 3
-	for state, eans := range stateEANMap {
-		for ean, prices := range eans {
+	for state, eansData := range stateEANMap {
+		for ean, prices := range eansData {
 			sort.Slice(prices, func(i, j int) bool {
 				return prices[i].Price < prices[j].Price
 			})
@@ -333,7 +329,8 @@ func parseCheapest() {
 				top3 = prices[:3]
 			}
 
-			fmt.Printf("State: %s, EAN: %s\n", state, ean)
+			eanName := eans[ean]
+			fmt.Printf("State: %s, EAN: %s (%s)\n", state, ean, eanName)
 			for _, info := range top3 {
 				fmt.Printf("- Price: %.2f, Store: %s, Suburb: %s\n", info.Price, info.StoreName, info.Suburb)
 			}
