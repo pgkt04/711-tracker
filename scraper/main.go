@@ -33,7 +33,7 @@ func main() {
 	// Create a Firestore client by providing your credentials file path (if needed)
 	// Replace "path-to-your-service-account-key.json" with your actual service account key file
 	// If you're running this on Google Cloud, it will pick up the credentials automatically
-	client, err := firestore.NewClient(ctx, "fuel-data-2e457", option.WithCredentialsFile("path-to-your-service-account-key.json"))
+	client, err := firestore.NewClient(ctx, "fuel-data-2e457", option.WithCredentialsFile("fuel-data-2e457-firebase-adminsdk-f32yg-a6bd68f23a.json"))
 	if err != nil {
 		log.Fatalf("Failed to create Firestore client: %v", err)
 	}
