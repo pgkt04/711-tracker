@@ -3,10 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"scraper/fuel"
 	"scraper/stores"
+	"sort"
 	"time"
 )
 
@@ -224,6 +226,123 @@ func writeToFile(filename string, data interface{}) error {
 	return nil
 }
 
+type StoreFuelData struct {
+	Store stores.Store
+	Price fuel.FuelPrice
+}
+
+func readStoresFromFile(filename string) []stores.Store {
+	file, err := os.Open(filename)
+	if err != nil {
+		fmt.Printf("Failed to open stores file: %v\n", err)
+		return nil
+	}
+	defer file.Close()
+
+	var storeList []stores.Store
+	bytes, _ := io.ReadAll(file)
+	if err := json.Unmarshal(bytes, &storeList); err != nil {
+		fmt.Printf("Failed to parse stores JSON: %v\n", err)
+		return nil
+	}
+
+	return storeList
+}
+
+func readFuelPricesFromFile(filename string) []fuel.FuelPrice {
+	file, err := os.Open(filename)
+	if err != nil {
+		fmt.Printf("Failed to open fuel file: %v\n", err)
+		return nil
+	}
+	defer file.Close()
+
+	var fuelPriceList []fuel.FuelPrice
+	bytes, _ := io.ReadAll(file)
+	if err := json.Unmarshal(bytes, &fuelPriceList); err != nil {
+		fmt.Printf("Failed to parse fuel JSON: %v\n", err)
+		return nil
+	}
+
+	return fuelPriceList
+}
+
+func parseCheapest() {
+
+	//	eans := map[string]string{
+	//		"52": "Special Unleaded 91",
+	//		"53": "Special Diesel",
+	//		"57": "Special E10",
+	//		"56": "Supreme+ 98",
+	//		"55": "Extra 95",
+	//	}
+
+	storeFileName := "stores-20241018-155736.json" // Replace with actual path
+	fuelFileName := "fuel-20241018-155736.json"    // Replace with actual path
+
+	storesList := readStoresFromFile(storeFileName)
+	fuelPrices := readFuelPricesFromFile(fuelFileName)
+
+	// Create a map to hold stores by their Store ID for easy lookup
+	storeMap := make(map[string]stores.Store)
+	for _, store := range storesList {
+		storeMap[store.StoreId] = store
+	}
+
+	// Map to hold cheapest prices by State and EAN
+	type FuelStateData struct {
+		State     string
+		Price     float64
+		StoreID   string
+		StoreName string
+		Suburb    string
+	}
+
+	stateEANMap := make(map[string]map[string][]FuelStateData) // map[state][EAN]
+
+	for _, price := range fuelPrices {
+		store, exists := storeMap[price.StoreNo]
+		if !exists {
+			continue
+		}
+		ean := price.EAN
+		state := store.Address.State
+
+		// Initialize nested maps as needed
+		if _, exists := stateEANMap[state]; !exists {
+			stateEANMap[state] = make(map[string][]FuelStateData)
+		}
+		stateEANMap[state][ean] = append(stateEANMap[state][ean], FuelStateData{
+			State:     state,
+			Price:     float64(price.Price),
+			StoreID:   store.StoreId,
+			StoreName: store.Name,
+			Suburb:    store.Address.Suburb,
+		})
+	}
+
+	// Sort each list by price and take top 3
+	for state, eans := range stateEANMap {
+		for ean, prices := range eans {
+			sort.Slice(prices, func(i, j int) bool {
+				return prices[i].Price < prices[j].Price
+			})
+
+			top3 := prices
+			if len(prices) > 3 {
+				top3 = prices[:3]
+			}
+
+			fmt.Printf("State: %s, EAN: %s\n", state, ean)
+			for _, info := range top3 {
+				fmt.Printf("- Price: %.2f, Store: %s, Suburb: %s\n", info.Price, info.StoreName, info.Suburb)
+			}
+			fmt.Println()
+		}
+	}
+}
+
 func main() {
-	downloadData()
+	//downloadData()
+	parseCheapest()
 }
