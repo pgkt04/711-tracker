@@ -63,30 +63,40 @@ type StoresResponse struct {
 	Stores []Store `json:"stores"`
 }
 
-func test_stores() {
-	url := "https://www.7eleven.com.au/storelocator-retail/mulesoft/stores?lat=-33.8688197&long=151.2092955&dist=10" // Replace with the actual URL
+func fetchStores() (*StoresResponse, error) {
+	url := "https://www.7eleven.com.au/storelocator-retail/mulesoft/stores" // Replace with the actual URL
 
 	resp, err := http.Get(url)
 	if err != nil {
-		fmt.Println("Error fetching data:", err)
-		return
+		return nil, fmt.Errorf("error fetching data: %v", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		fmt.Println("Error: status code", resp.StatusCode)
-		return
+		return nil, fmt.Errorf("error: status code %d", resp.StatusCode)
 	}
 
 	// Decode the response into the Go struct
 	var storesResponse StoresResponse
 	if err := json.NewDecoder(resp.Body).Decode(&storesResponse); err != nil {
-		fmt.Println("Error decoding response:", err)
+		return nil, fmt.Errorf("error decoding response: %v", err)
+	}
+
+	return &storesResponse, nil
+}
+
+func test_stores() {
+	storesResponse, err := fetchStores()
+	if err != nil {
+		fmt.Printf("Error fetching stores: %v\n", err)
 		return
 	}
 
-	// Print the decoded data (for debugging purposes)
+	// Use the fetched store data
 	for _, store := range storesResponse.Stores {
+		if !store.IsFuelStore {
+			continue
+		}
 		fmt.Printf("Store ID: %s, Name: %s, Distance: %f\n", store.StoreId, store.Name, store.Distance)
 	}
 }
@@ -100,12 +110,12 @@ type FuelPrice struct {
 	StoreNo           string    `json:"storeNo"`
 }
 
-type Response struct {
+type FuelResponse struct {
 	Data []FuelPrice `json:"data"`
 }
 
 // Function to perform the GET request
-func getFuelPrices(storeNo string) (*Response, error) {
+func getFuelPrices(storeNo string) (*FuelResponse, error) {
 	// Create the URL with the provided store number
 	url := fmt.Sprintf("https://www.7eleven.com.au/storelocator-retail/mulesoft/fuelPrices?storeNo=%s", storeNo)
 
@@ -128,7 +138,7 @@ func getFuelPrices(storeNo string) (*Response, error) {
 	}
 
 	// Parse the JSON response
-	var result Response
+	var result FuelResponse
 	err = json.Unmarshal(body, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse JSON response: %v", err)
@@ -163,6 +173,6 @@ func test_fuel() {
 }
 
 func main() {
-	// test_stores()
-	test_fuel()
+	test_stores()
+	// test_fuel()
 }
