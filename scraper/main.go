@@ -237,11 +237,6 @@ var eans = map[string]string{
 	"54": "LPG",
 }
 
-type StoreFuelData struct {
-	Store stores.Store
-	Price fuel.FuelPrice
-}
-
 func readStoresFromFile(filename string) []stores.Store {
 	file, err := os.Open(filename)
 	if err != nil {
@@ -304,6 +299,8 @@ func parseCheapest() {
 		StoreID   string
 		StoreName string
 		Suburb    string
+		Address   string
+		Postcode  string
 	}
 
 	stateEANMap := make(map[string]map[string][]FuelStateData)
@@ -325,6 +322,8 @@ func parseCheapest() {
 			StoreID:   store.StoreId,
 			StoreName: store.Name,
 			Suburb:    store.Address.Suburb,
+			Address:   store.Address.Address1, // address 2 usually empty
+			Postcode:  store.Address.Postcode,
 		})
 	}
 
@@ -367,6 +366,8 @@ func parseCheapest() {
 					"priceDate": info.PriceDate,
 					"state":     info.State,
 					"suburb":    info.Suburb,
+					"address":   info.Address,
+					"postcode":  info.Postcode,
 				})
 
 				if err != nil {
