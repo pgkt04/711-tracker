@@ -281,7 +281,7 @@ func readFuelPricesFromFile(filename string) []fuel.FuelPrice {
 func parseCheapest() {
 	ctx := context.Background()
 	client := models.GetClient()
-	storeCollection := client.Collection("store")
+	// storeCollection := client.Collection("store") // not needed?
 	fuelCollection := client.Collection("fuel")
 
 	storeFileName := "stores-20241019-130307.json"
@@ -359,18 +359,24 @@ func parseCheapest() {
 				//			}
 				//			fmt.Println("Added entry!")
 
-				fuelCollection.Add(ctx, map[string]interface{}{
+				_, _, err := fuelCollection.Add(ctx, map[string]interface{}{
 					"time":      currentTime,
 					"storeID":   info.StoreID,
 					"ean":       ean,
 					"price":     info.Price,
 					"priceDate": info.PriceDate,
+					"state":     info.State,
+					"suburb":    info.Suburb,
 				})
-			}
 
+				if err != nil {
+					fmt.Println("Failed to insert into firestore")
+				}
+			}
 			fmt.Println()
 		}
 	}
+	fmt.Println("Done!")
 }
 
 func main() {
