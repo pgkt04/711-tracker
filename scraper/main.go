@@ -232,7 +232,7 @@ var eans = map[string]string{
 	"57": "Special E10",
 	"56": "Supreme+ 98",
 	"55": "Extra 95",
-	//"94":
+	"54": "LPG",
 }
 
 type StoreFuelData struct {
@@ -318,6 +318,8 @@ func parseCheapest() {
 		})
 	}
 
+	fmt.Println(stateEANMap)
+
 	for state, eansData := range stateEANMap {
 		for ean, prices := range eansData {
 			sort.Slice(prices, func(i, j int) bool {
@@ -340,6 +342,6 @@ func parseCheapest() {
 }
 
 func main() {
-	//downloadData()
-	parseCheapest()
+	downloadData()
+	//parseCheapest()
 }
