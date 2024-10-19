@@ -277,8 +277,8 @@ func readFuelPricesFromFile(filename string) []fuel.FuelPrice {
 }
 
 func parseCheapest() {
-	storeFileName := "stores-20241018-155736.json" // Replace with actual path
-	fuelFileName := "fuel-20241018-155736.json"    // Replace with actual path
+	storeFileName := "stores-20241019-130307.json"
+	fuelFileName := "fuel-20241019-130307.json"
 
 	storesList := readStoresFromFile(storeFileName)
 	fuelPrices := readFuelPricesFromFile(fuelFileName)
@@ -342,6 +342,6 @@ func parseCheapest() {
 }
 
 func main() {
-	downloadData()
-	//parseCheapest()
+	//downloadData()
+	parseCheapest()
 }
