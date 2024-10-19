@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"scraper/fuel"
+	"scraper/models"
 	"scraper/stores"
 	"sort"
 	"time"
@@ -277,11 +279,18 @@ func readFuelPricesFromFile(filename string) []fuel.FuelPrice {
 }
 
 func parseCheapest() {
+	ctx := context.Background()
+	client := models.GetClient()
+	storeCollection := client.Collection("store")
+	fuelCollection := client.Collection("fuel")
+
 	storeFileName := "stores-20241019-130307.json"
 	fuelFileName := "fuel-20241019-130307.json"
 
 	storesList := readStoresFromFile(storeFileName)
 	fuelPrices := readFuelPricesFromFile(fuelFileName)
+
+	currentTime := time.Now()
 
 	storeMap := make(map[string]stores.Store)
 	for _, store := range storesList {
@@ -291,6 +300,7 @@ func parseCheapest() {
 	type FuelStateData struct {
 		State     string
 		Price     float64
+		PriceDate string
 		StoreID   string
 		StoreName string
 		Suburb    string
@@ -318,8 +328,6 @@ func parseCheapest() {
 		})
 	}
 
-	fmt.Println(stateEANMap)
-
 	for state, eansData := range stateEANMap {
 		for ean, prices := range eansData {
 			sort.Slice(prices, func(i, j int) bool {
@@ -335,7 +343,31 @@ func parseCheapest() {
 			fmt.Printf("State: %s, EAN: %s (%s)\n", state, ean, eanName)
 			for _, info := range top3 {
 				fmt.Printf("- Price: %.2f, Store: %s, Suburb: %s\n", info.Price, info.StoreName, info.Suburb)
+
+				//		for _, info := range infos {
+				//			_, _, err := fuelCollection.Add(ctx, map[string]interface{}{
+				//				"timestamp":         time.Now(),
+				//				"ean":               ean,
+				//				"price":             info.Price,
+				//				"priceDate":         info.PriceDate,
+				//				"isRecentlyUpdated": info.IsRecentlyUpdated,
+				//				"storeNo":           info.StoreID,
+				//			})
+				//			if err != nil {
+				//				fmt.Printf("Failed to write fuel price to Firestore: %v \n", err)
+				//				continue
+				//			}
+				//			fmt.Println("Added entry!")
+
+				fuelCollection.Add(ctx, map[string]interface{}{
+					"time":      currentTime,
+					"storeID":   info.StoreID,
+					"ean":       ean,
+					"price":     info.Price,
+					"priceDate": info.PriceDate,
+				})
 			}
+
 			fmt.Println()
 		}
 	}
