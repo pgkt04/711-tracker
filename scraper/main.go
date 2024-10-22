@@ -279,8 +279,8 @@ func parseCheapest() {
 	// storeCollection := client.Collection("store") // not needed?
 	fuelCollection := client.Collection("fuel")
 
-	storeFileName := "stores-20241019-130307.json"
-	fuelFileName := "fuel-20241019-130307.json"
+	storeFileName := "stores-20241022-211146.json"
+	fuelFileName := "fuel-20241022-211146.json"
 
 	storesList := readStoresFromFile(storeFileName)
 	fuelPrices := readFuelPricesFromFile(fuelFileName)
@@ -295,7 +295,7 @@ func parseCheapest() {
 	type FuelStateData struct {
 		State     string
 		Price     float64
-		PriceDate string
+		PriceDate time.Time
 		StoreID   string
 		StoreName string
 		Suburb    string
@@ -319,6 +319,7 @@ func parseCheapest() {
 		stateEANMap[state][ean] = append(stateEANMap[state][ean], FuelStateData{
 			State:     state,
 			Price:     float64(price.Price),
+			PriceDate: price.PriceDate,
 			StoreID:   store.StoreId,
 			StoreName: store.Name,
 			Suburb:    store.Address.Suburb,
