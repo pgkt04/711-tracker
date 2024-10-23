@@ -251,7 +251,7 @@ func downloadAndParseCheapest() {
 
 	// Step 2: Process Each Store to Fetch Fuel Prices
 	for _, store := range storesResponse.Stores {
-		fmt.Printf("Store ID: %s, Name: %s, Distance: %f\n", store.StoreId, store.Name, store.Distance)
+		fmt.Printf("Store ID: %s, Name: %s \n", store.StoreId, store.Name)
 		if store.IsFuelStore {
 			allStores = append(allStores, store)
 			success := processStore(store, &allFuelPrices)
@@ -270,7 +270,6 @@ func downloadAndParseCheapest() {
 	ctx := context.Background()
 	client := models.GetClient()
 	fuelCollection := client.Collection("fuel")
-
 	currentTime := time.Now()
 
 	// Create a map for quick store lookup
