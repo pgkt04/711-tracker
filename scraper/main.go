@@ -356,7 +356,5 @@ func downloadAndParseCheapest() {
 }
 
 func main() {
-	//downloadData()
-	//parseCheapest()
 	downloadAndParseCheapest()
 }
