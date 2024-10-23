@@ -1,37 +1,18 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // Allow read operations to the "fuel" collection
+    match /fuel/{document} {
+      allow read: if true; // Public read access
+
+      // Deny all client-side write operations
+      allow create, update, delete: if false;
+    }
+
+    // Deny all other read and write operations on other collections
     match /{document=**} {
       allow read, write: if false;
     }
-  }
-}
-
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    // Match any document in the "fuel" collection
-    match /fuel/{document} {
-
-      // Allow read for anyone (you can restrict this further if needed)
-      allow read: if true;
-
-      // Allow write only if the data structure is valid
-      allow create, update: if validateFuelData(request.resource.data);
-    }
-  }
-
-  // Function to validate the structure and ensure all required fields are non-empty
-  function validateFuelData(data) {
-    return data.time is timestamp
-      && data.storeID is string && data.storeID.size() > 0
-      && data.ean is string && data.ean.size() > 0
-      && data.price is number && data.price > 0
-      && data.priceDate is timestamp
-      && data.state is string && data.state.size() > 0
-      && data.suburb is string && data.suburb.size() > 0
-      && data.address is string && data.address.size() > 0
-      && data.postcode is string && data.postcode.size() > 0;
   }
 }
