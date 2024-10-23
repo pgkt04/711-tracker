@@ -110,7 +110,7 @@ const FuelDataComponent: React.FC = () => {
 
     return (
         <div>
-            <h1>Fuel Prices</h1>
+            <h1>7/11 Fuel Prices</h1>
             {Object.keys(stateEanCheapestMap).sort().map((state) => {
                 const eanMap = stateEanCheapestMap[state];
                 const eansList = Object.keys(eanMap).sort((a, b) => {

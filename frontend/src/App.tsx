@@ -1,12 +1,11 @@
 import FuelDataComponent from './components/FuelDataComponent';
 
 function App() {
-  return (
-    <>
-      <h1>Fuel Tracking Application</h1>
-      <FuelDataComponent />
-    </>
-  );
+    return (
+        <div style={{ paddingLeft: '20px' }}> {/* Adjust the value as needed */}
+            <FuelDataComponent />
+        </div>
+    );
 }
 
 export default App;
