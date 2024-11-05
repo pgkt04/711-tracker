@@ -110,14 +110,41 @@ const FuelDataComponent: React.FC = () => {
                     }
                 });
 
+                // **Step 4: Sort EANs Lexicographically within Each State and Index**
+                for (const state in tempStateEanCheapestMap) {
+                    for (const idx in tempStateEanCheapestMap[state]) {
+                        // Get the EANs and sort them lexicographically based on their descriptive names
+                        const sortedEans = Object.keys(tempStateEanCheapestMap[state][idx]).sort((a, b) => {
+                            const nameA = eans[a] || a;
+                            const nameB = eans[b] || b;
+                            return nameA.localeCompare(nameB);
+                        });
+
+                        // Create a new sorted object
+                        const sortedEanObj: {
+                            [ean: string]: {
+                                price: number;
+                                fuelDataList: FuelData[];
+                            };
+                        } = {};
+
+                        sortedEans.forEach((ean) => {
+                            sortedEanObj[ean] = tempStateEanCheapestMap[state][idx][ean];
+                        });
+
+                        // Replace the unsorted object with the sorted one
+                        tempStateEanCheapestMap[state][idx] = sortedEanObj;
+                    }
+                }
+
                 setStateEanCheapestMap(tempStateEanCheapestMap);
-                console.log(tempStateEanCheapestMap);
 
                 // Initialize currentIdxMap with 0 for each state
                 const initialIdxMap: { [state: string]: number } = {};
                 Object.keys(tempStateEanCheapestMap).forEach(state => {
                     initialIdxMap[state] = 0;
                 });
+
                 setCurrentIdxMap(initialIdxMap);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -145,9 +172,9 @@ const FuelDataComponent: React.FC = () => {
                 const currentIdx = currentIdxMap[state] || 0;
                 const eanMap = eanMapForState[currentIdx] || {};
                 const eansList = Object.keys(eanMap).sort((a, b) => {
-                    const priceA = eanMap[a].price;
-                    const priceB = eanMap[b].price;
-                    return priceA - priceB;
+                    const nameA = eans[a] || a;
+                    const nameB = eans[b] || b;
+                    return nameA.localeCompare(nameB);
                 });
 
                 // Calculate the total number of idx for this state
@@ -195,14 +222,14 @@ const FuelDataComponent: React.FC = () => {
                                                     key={`${state}-${ean}-${index}`}
                                                     className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} border-b border-gray-200 ${isLastRow ? 'border-b-0' : ''}`}
                                                 >
-                                                    <td className="py-4 px-5 text-sm text-gray-700  border-gray-200">{eans[ean] || ean}</td>
-                                                    <td className="py-4 px-5 text-sm text-gray-700  border-gray-200">${(price / 10).toFixed(2)}</td>
-                                                    {/* <td className="py-4 px-5 text-sm text-gray-700  border-gray-200">{fuelData.address}</td> */}
-                                                    <td className="py-4 px-5 text-sm text-gray-700  border-gray-200">{fuelData.suburb}</td>
-                                                    <td className="py-4 px-5 text-sm text-gray-700  border-gray-200">{fuelData.state}</td>
-                                                    <td className="py-4 px-5 text-sm text-gray-700  border-gray-200">{fuelData.postcode}</td>
-                                                    <td className="py-4 px-5 text-sm text-gray-700  border-gray-200">{fuelData.time.toDate().toLocaleString()}</td>
-                                                    <td className="py-4 px-5 text-sm text-gray-700  border-gray-200">{fuelData.priceDate.toDate().toLocaleString()}</td>
+                                                    <td className="py-4 px-5 text-sm text-gray-700 border-gray-200">{eans[ean] || ean}</td>
+                                                    <td className="py-4 px-5 text-sm text-gray-700 border-gray-200">${(price / 10).toFixed(2)}</td>
+                                                    {/* <td className="py-4 px-5 text-sm text-gray-700 border-gray-200">{fuelData.address}</td> */}
+                                                    <td className="py-4 px-5 text-sm text-gray-700 border-gray-200">{fuelData.suburb}</td>
+                                                    <td className="py-4 px-5 text-sm text-gray-700 border-gray-200">{fuelData.state}</td>
+                                                    <td className="py-4 px-5 text-sm text-gray-700 border-gray-200">{fuelData.postcode}</td>
+                                                    <td className="py-4 px-5 text-sm text-gray-700 border-gray-200">{fuelData.time.toDate().toLocaleString()}</td>
+                                                    <td className="py-4 px-5 text-sm text-gray-700 border-gray-200">{fuelData.priceDate.toDate().toLocaleString()}</td>
                                                 </tr>
                                             );
                                         });
