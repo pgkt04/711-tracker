@@ -1,9 +1,11 @@
 import FuelDataComponent from './components/FuelDataComponent';
+import FuelDataComponent2 from './components/FuelDataComponent2';
 
 function App() {
     return (
-        <div style={{ paddingLeft: '20px' }}> {/* Adjust the value as needed */}
-            <FuelDataComponent />
+        <div>
+            {/* <FuelDataComponent /> */}
+            <FuelDataComponent2/>
         </div>
     );
 }
