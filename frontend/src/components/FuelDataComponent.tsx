@@ -28,15 +28,19 @@ const eans: { [key: string]: string } = {
 };
 
 const FuelDataComponent: React.FC = () => {
-    // State to hold the cheapest data: state -> ean -> {price, fuelDataList}
     const [stateEanCheapestMap, setStateEanCheapestMap] = useState<{
         [state: string]: {
-            [ean: string]: {
-                price: number;
-                fuelDataList: FuelData[];
+            [index: number]: {
+                [ean: string]: {
+                    price: number;
+                    fuelDataList: FuelData[];
+                };
             };
         };
     }>({});
+
+    // New state to keep track of current index per state
+    const [currentIdxMap, setCurrentIdxMap] = useState<{ [state: string]: number }>({});
 
     useEffect(() => {
         const fetchData = async () => {
@@ -66,13 +70,19 @@ const FuelDataComponent: React.FC = () => {
                 // Step 3: Organize data into state -> ean -> {price, fuelDataList}
                 const tempStateEanCheapestMap: {
                     [state: string]: {
-                        [ean: string]: {
-                            price: number;
-                            fuelDataList: FuelData[];
+                        [idx: number]: {
+                            [ean: string]: {
+                                price: number;
+                                fuelDataList: FuelData[];
+                            };
                         };
                     };
                 } = {};
 
+                // Sort fuelDataArray by price
+                fuelDataArray.sort((a, b) => a.price - b.price);
+
+                // Insert into tempStateEanCheapestMap
                 fuelDataArray.forEach((fuelData) => {
                     const state = fuelData.state;
                     const ean = fuelData.ean;
@@ -81,25 +91,34 @@ const FuelDataComponent: React.FC = () => {
                         tempStateEanCheapestMap[state] = {};
                     }
 
-                    if (!tempStateEanCheapestMap[state][ean]) {
-                        tempStateEanCheapestMap[state][ean] = {
-                            price: fuelData.price,
-                            fuelDataList: [fuelData],
-                        };
-                    } else {
-                        const existingEntry = tempStateEanCheapestMap[state][ean];
-                        if (fuelData.price < existingEntry.price) {
-                            // Replace with new cheaper price and reset fuelDataList
-                            existingEntry.price = fuelData.price;
-                            existingEntry.fuelDataList = [fuelData];
-                        } else if (fuelData.price === existingEntry.price) {
-                            // Same price, add to fuelDataList
-                            existingEntry.fuelDataList.push(fuelData);
+                    let inserted = false;
+                    let idx = 0;
+                    while (!inserted) {
+                        if (!tempStateEanCheapestMap[state][idx]) {
+                            tempStateEanCheapestMap[state][idx] = {}
                         }
+
+                        if (!tempStateEanCheapestMap[state][idx][ean]) {
+                            tempStateEanCheapestMap[state][idx][ean] = {
+                                price: fuelData.price,
+                                fuelDataList: [fuelData],
+                            };
+                            inserted = true;
+                            break;
+                        }
+                        idx++;
                     }
                 });
 
                 setStateEanCheapestMap(tempStateEanCheapestMap);
+                console.log(tempStateEanCheapestMap);
+
+                // Initialize currentIdxMap with 0 for each state
+                const initialIdxMap: { [state: string]: number } = {};
+                Object.keys(tempStateEanCheapestMap).forEach(state => {
+                    initialIdxMap[state] = 0;
+                });
+                setCurrentIdxMap(initialIdxMap);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -108,58 +127,85 @@ const FuelDataComponent: React.FC = () => {
         fetchData();
     }, []);
 
+    // Handler for the Next button
+    const handleNext = (state: string) => {
+        setCurrentIdxMap(prev => {
+            const currentIdx = prev[state] || 0;
+            const maxIdx = Object.keys(stateEanCheapestMap[state] || {}).length - 1;
+            const nextIdx = currentIdx >= maxIdx ? 0 : currentIdx + 1;
+            return { ...prev, [state]: nextIdx };
+        });
+    };
+
     return (
-        <div>
-            <h1>7/11 Fuel Prices</h1>
+        <div className="container mx-auto p-6">
+            <h1 className="text-3xl font-bold mb-8 text-center text-blue-600">7/11 Fuel Prices</h1>
             {Object.keys(stateEanCheapestMap).sort().map((state) => {
-                const eanMap = stateEanCheapestMap[state];
+                const eanMapForState = stateEanCheapestMap[state];
+                const currentIdx = currentIdxMap[state] || 0;
+                const eanMap = eanMapForState[currentIdx] || {};
                 const eansList = Object.keys(eanMap).sort((a, b) => {
                     const priceA = eanMap[a].price;
                     const priceB = eanMap[b].price;
                     return priceA - priceB;
                 });
 
-                return (
-                    <div key={state} style={{ marginBottom: '40px' }}>
-                        <h2>Best prices ({state}):</h2>
-                        <table
-                            border={1}
-                            cellPadding={5}
-                            cellSpacing="0"
-                            style={{ width: '100%', borderCollapse: 'collapse' }}
-                        >
-                            <thead>
-                            <tr>
-                                <th>Fuel</th>
-                                <th>Price</th>
-                                <th>Address</th>
-                                <th>Suburb</th>
-                                <th>State</th>
-                                <th>Postcode</th>
-                                <th>Time scraped</th>
-                                <th>Price date</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {eansList.map((ean) => {
-                                const { price, fuelDataList } = eanMap[ean];
+                // Calculate the total number of idx for this state
+                const totalIdx = Object.keys(eanMapForState).length;
 
-                                // Display all stations with the cheapest price for this EAN
-                                return fuelDataList.map((fuelData, index) => (
-                                    <tr key={`${state}-${ean}-${index}`}>
-                                        <td>{eans[ean] || ean}</td>
-                                        <td>{(price / 10).toFixed(2)}</td>
-                                        <td>{fuelData.address}</td>
-                                        <td>{fuelData.suburb}</td>
-                                        <td>{fuelData.state}</td>
-                                        <td>{fuelData.postcode}</td>
-                                        <td>{fuelData.time.toDate().toLocaleString()}</td>
-                                        <td>{fuelData.priceDate.toDate().toLocaleString()}</td>
+                return (
+                    <div key={state} className="mb-12">
+                        <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+                            Best Prices in <span className="text-blue-500">{state}</span> - Page {currentIdx + 1} of {totalIdx}
+                        </h2>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full bg-white rounded-lg overflow-hidden shadow border border-gray-300">
+                                <thead className="bg-gray-200">
+                                    <tr>
+                                        <th className="py-3 px-5 text-left text-sm font-medium text-gray-700 border-b border-gray-300">Fuel</th>
+                                        <th className="py-3 px-5 text-left text-sm font-medium text-gray-700 border-b border-gray-300">Price ($)</th>
+                                        <th className="py-3 px-5 text-left text-sm font-medium text-gray-700 border-b border-gray-300">Address</th>
+                                        <th className="py-3 px-5 text-left text-sm font-medium text-gray-700 border-b border-gray-300">Suburb</th>
+                                        <th className="py-3 px-5 text-left text-sm font-medium text-gray-700 border-b border-gray-300">State</th>
+                                        <th className="py-3 px-5 text-left text-sm font-medium text-gray-700 border-b border-gray-300">Postcode</th>
+                                        <th className="py-3 px-5 text-left text-sm font-medium text-gray-700 border-b border-gray-300">Time Scraped</th>
+                                        <th className="py-3 px-5 text-left text-sm font-medium text-gray-700 border-b border-gray-300">Price Date</th>
                                     </tr>
-                                ));
-                            })}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody className="divide-y divide-gray-300">
+                                    {eansList.map((ean) => {
+                                        const { price, fuelDataList } = eanMap[ean];
+
+                                        // Display all stations with the cheapest price for this EAN
+                                        return fuelDataList.map((fuelData, index) => (
+                                            <tr
+                                                key={`${state}-${ean}-${index}`}
+                                                className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                                            >
+                                                <td className="py-4 px-5 text-sm text-gray-700 border-b border-gray-200">{eans[ean] || ean}</td>
+                                                <td className="py-4 px-5 text-sm text-gray-700 border-b border-gray-200">${(price / 10).toFixed(2)}</td>
+                                                <td className="py-4 px-5 text-sm text-gray-700 border-b border-gray-200">{fuelData.address}</td>
+                                                <td className="py-4 px-5 text-sm text-gray-700 border-b border-gray-200">{fuelData.suburb}</td>
+                                                <td className="py-4 px-5 text-sm text-gray-700 border-b border-gray-200">{fuelData.state}</td>
+                                                <td className="py-4 px-5 text-sm text-gray-700 border-b border-gray-200">{fuelData.postcode}</td>
+                                                <td className="py-4 px-5 text-sm text-gray-700 border-b border-gray-200">{fuelData.time.toDate().toLocaleString()}</td>
+                                                <td className="py-4 px-5 text-sm text-gray-700 border-b border-gray-200">{fuelData.priceDate.toDate().toLocaleString()}</td>
+                                            </tr>
+                                        ));
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                        {totalIdx > 1 && (
+                            <div className="flex justify-end mt-4">
+                                <button
+                                    onClick={() => handleNext(state)}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        )}
                     </div>
                 );
             })}
