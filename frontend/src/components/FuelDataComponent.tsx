@@ -158,13 +158,13 @@ const FuelDataComponent: React.FC = () => {
                         <h2 className="text-2xl font-semibold mb-4 text-gray-800">
                             Best Prices in <span className="text-blue-500">{state}</span> - Page {currentIdx + 1} of {totalIdx}
                         </h2>
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full bg-white rounded-lg overflow-hidden shadow border border-gray-300">
+                        <div className="min-w-full bg-white rounded-lg shadow overflow-hidden">
+                            <table className="min-w-full">
                                 <thead className="bg-gray-200">
                                     <tr>
                                         <th className="py-3 px-5 text-left text-sm font-medium text-gray-700 border-b border-gray-300">Fuel</th>
                                         <th className="py-3 px-5 text-left text-sm font-medium text-gray-700 border-b border-gray-300">Price ($)</th>
-                                        <th className="py-3 px-5 text-left text-sm font-medium text-gray-700 border-b border-gray-300">Address</th>
+                                        {/* <th className="py-3 px-5 text-left text-sm font-medium text-gray-700 border-b border-gray-300">Address</th> */}
                                         <th className="py-3 px-5 text-left text-sm font-medium text-gray-700 border-b border-gray-300">Suburb</th>
                                         <th className="py-3 px-5 text-left text-sm font-medium text-gray-700 border-b border-gray-300">State</th>
                                         <th className="py-3 px-5 text-left text-sm font-medium text-gray-700 border-b border-gray-300">Postcode</th>
@@ -177,21 +177,35 @@ const FuelDataComponent: React.FC = () => {
                                         const { price, fuelDataList } = eanMap[ean];
 
                                         // Display all stations with the cheapest price for this EAN
-                                        return fuelDataList.map((fuelData, index) => (
-                                            <tr
-                                                key={`${state}-${ean}-${index}`}
-                                                className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
-                                            >
-                                                <td className="py-4 px-5 text-sm text-gray-700 border-b border-gray-200">{eans[ean] || ean}</td>
-                                                <td className="py-4 px-5 text-sm text-gray-700 border-b border-gray-200">${(price / 10).toFixed(2)}</td>
-                                                <td className="py-4 px-5 text-sm text-gray-700 border-b border-gray-200">{fuelData.address}</td>
-                                                <td className="py-4 px-5 text-sm text-gray-700 border-b border-gray-200">{fuelData.suburb}</td>
-                                                <td className="py-4 px-5 text-sm text-gray-700 border-b border-gray-200">{fuelData.state}</td>
-                                                <td className="py-4 px-5 text-sm text-gray-700 border-b border-gray-200">{fuelData.postcode}</td>
-                                                <td className="py-4 px-5 text-sm text-gray-700 border-b border-gray-200">{fuelData.time.toDate().toLocaleString()}</td>
-                                                <td className="py-4 px-5 text-sm text-gray-700 border-b border-gray-200">{fuelData.priceDate.toDate().toLocaleString()}</td>
-                                            </tr>
-                                        ));
+                                        return fuelDataList.map((fuelData, index, array) => {
+                                            // Determine if this is the last row in the entire table
+                                            // Calculate the total number of rows for this state
+                                            const totalRows = eansList.reduce((acc, currentEan) => acc + (stateEanCheapestMap[state][currentIdx][currentEan].fuelDataList.length), 0);
+                                            // Calculate the current row index
+                                            let currentRowIndex = 0;
+                                            for (let e of eansList) {
+                                                if (e === ean) break;
+                                                currentRowIndex += stateEanCheapestMap[state][currentIdx][e].fuelDataList.length;
+                                            }
+                                            currentRowIndex += index;
+                                            const isLastRow = currentRowIndex === totalRows - 1;
+
+                                            return (
+                                                <tr
+                                                    key={`${state}-${ean}-${index}`}
+                                                    className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} border-b border-gray-200 ${isLastRow ? 'border-b-0' : ''}`}
+                                                >
+                                                    <td className="py-4 px-5 text-sm text-gray-700  border-gray-200">{eans[ean] || ean}</td>
+                                                    <td className="py-4 px-5 text-sm text-gray-700  border-gray-200">${(price / 10).toFixed(2)}</td>
+                                                    {/* <td className="py-4 px-5 text-sm text-gray-700  border-gray-200">{fuelData.address}</td> */}
+                                                    <td className="py-4 px-5 text-sm text-gray-700  border-gray-200">{fuelData.suburb}</td>
+                                                    <td className="py-4 px-5 text-sm text-gray-700  border-gray-200">{fuelData.state}</td>
+                                                    <td className="py-4 px-5 text-sm text-gray-700  border-gray-200">{fuelData.postcode}</td>
+                                                    <td className="py-4 px-5 text-sm text-gray-700  border-gray-200">{fuelData.time.toDate().toLocaleString()}</td>
+                                                    <td className="py-4 px-5 text-sm text-gray-700  border-gray-200">{fuelData.priceDate.toDate().toLocaleString()}</td>
+                                                </tr>
+                                            );
+                                        });
                                     })}
                                 </tbody>
                             </table>
